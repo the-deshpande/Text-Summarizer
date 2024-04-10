@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Paragraph Summarizer</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+	<div class="header">
+		<h1>Paragraph Summarizer {{ hello }}</h1>
+	</div>
+	<div class="container">
+		<form method="POST" action="/summarize">
+			<div class="form-group">
+				<label for="text">Enter text to summarize:</label>
+				<textarea id="text" name="text" placeholder="Type or paste text here"></textarea>
+			</div>
+			<button type="submit" class="btn" name="button" value="freq">Summarize (Frequency)</button>
+			<button type="submit" class="btn" name="button" value="dist">Summarize (Distance)</button>
+			<button type="submit" class="btn" name="button" value="luhn">Summarize (Luhn)</button>
+
+		</form>
+		{% if show %}
+		<div class="summary">
+			<h2>Summary:</h2>
+			<p>{{ text }}</p>
+		</div>
+		{% endif %}
+	</div>
+</body>
+
+</html>
