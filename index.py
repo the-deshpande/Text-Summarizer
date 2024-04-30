@@ -2,18 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for
 from nlp import summarize_cosine, summarize_freq, summarize_luhn
 
 app = Flask(__name__)
-text = ''
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    global text
-    return render_template('index.html', show=True if text else False, text=text)
+    if request.method == 'GET':
+        return render_template('index.html')
+    
+    output = summarize()
+
+    return output
 
 
-@app.route('/summarize', methods=['POST'])
 def summarize():
-    global text
 
     if request.form['button'] == 'freq':
         text = ''.join(summarize_freq(request.form['text'])[1])
@@ -22,7 +23,7 @@ def summarize():
     else:
         text = ''.join(summarize_cosine(request.form['text'])[1])
 
-    return redirect(url_for('home'))
+    return text
 
 
 if __name__ == '__main__':

@@ -4,31 +4,68 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Paragraph Summarizer</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
 
 <body>
 	<div class="header">
-		<h1>Paragraph Summarizer {{ hello }}</h1>
+		<h1>Paragraph Summarizer</h1>
 	</div>
 	<div class="container">
-		<form method="POST" action="/summarize">
+		<form id="input_form">
 			<div class="form-group">
 				<label for="text">Enter text to summarize:</label>
 				<textarea id="text" name="text" placeholder="Type or paste text here"></textarea>
 			</div>
-			<button type="submit" class="btn" name="button" value="freq">Summarize (Frequency)</button>
-			<button type="submit" class="btn" name="button" value="dist">Summarize (Distance)</button>
-			<button type="submit" class="btn" name="button" value="luhn">Summarize (Luhn)</button>
+
+			<div>
+				<input type="radio" name="summarize" class="radio" value="freq">
+				<label for="freq">Frequency</label>
+			</div>
+
+			<div>
+				<input type="radio" name="summarize" class="radio" value="dist">
+				<label for="freq">Distance</label>
+			</div>
+
+			<div>
+				<input type="radio" name="summarize" class="radio" value="luhn">
+				<label for="freq">Luhn</label>
+			</div>
+
+			<button type="submit" class="btn" name="button">Summarize</button>
 
 		</form>
-		{% if show %}
 		<div class="summary">
 			<h2>Summary:</h2>
-			<p>{{ text }}</p>
+			<p id="output">Your text will be summarized here</p>
 		</div>
-		{% endif %}
 	</div>
+
+	<script>
+		$(document).ready(function () {
+			$('#input_form').on('submit', function (event) {
+				var raw_text = $('#text').val();
+				var btn_val = $('.radio:checked').val();
+
+				$.ajax({
+					data: {
+						text: raw_text,
+						button: btn_val,
+					},
+					type: "POST",
+					url: '/'
+				}).done(function (data) {
+					var output_html = '<p id="output">' + data + '</p>';
+
+					$('#output').replaceWith($.parseHTML(output_html));
+				});
+
+				event.preventDefault();
+			});
+		});
+	</script>
 </body>
 
 </html>
